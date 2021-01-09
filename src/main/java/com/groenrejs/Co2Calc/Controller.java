@@ -10,9 +10,9 @@ public class Controller {
         return "index";
     }
 
-    @GetMapping("test")
+    @GetMapping("calculator")
     public String test(){
-        return "test";
+        return "calculator";
     }
 
 }
