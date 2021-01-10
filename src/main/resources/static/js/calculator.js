@@ -38,7 +38,7 @@ function initMap(){
 
 function getDistances(trip) {
     "use strict";
-
+    let distances = {};
     var bounds = new google.maps.LatLngBounds();
     var markersArray = [];
     var origin1 = trip["start"].toString();
@@ -119,22 +119,24 @@ function getDistances(trip) {
                             results[j].duration.text +
                             "<br>";
 
-                        let distances = {};
+
+/*
                        // distances["origin"] = originList[i]
                         // distances["destination"] = destinationList[j]
                         distances["vehicle"] = "Car";    //TODO set vehicle
                         distances["distance"] = results[j].distance.text;
                         distances["duration"] = results[j].duration.text;
+*/
 
                     }
                 }
             }
         }
     );
-    calcCo2(distances);
+  //  calcCo2(distances);
 }
 function calcCo2(distances){
-
+    //console.log(distances["distance"].toString())
 }
 function deleteMarkers(markersArray) {
     for (var i = 0; i < markersArray.length; i++) {
