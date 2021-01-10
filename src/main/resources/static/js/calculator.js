@@ -119,17 +119,19 @@ function getDistances(trip) {
                             results[j].duration.text +
                             "<br>";
 
-/*                        let distances = {};
+                        let distances = {};
                        // distances["origin"] = originList[i]
                         // distances["destination"] = destinationList[j]
                         distances["vehicle"] = "Car";    //TODO set vehicle
                         distances["distance"] = results[j].distance.text;
-                        distances["duration"] = results[j].duration.text;*/
+                        distances["duration"] = results[j].duration.text;
+
                     }
                 }
             }
         }
     );
+    calcCo2(distances);
 }
 function calcCo2(distances){
 
