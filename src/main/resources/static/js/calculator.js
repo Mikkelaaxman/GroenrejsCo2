@@ -1,4 +1,3 @@
-let distances = {};
 let markersArray = [];
 let map;
 
@@ -54,6 +53,8 @@ function geocodePosition(pos) {
 }
 
 function getDistances(trip) {
+    let distances = {};
+
     "use strict";
     var bounds = new google.maps.LatLngBounds();
 
@@ -151,7 +152,6 @@ function getDistances(trip) {
                         distances["carDistanceValue"] = results[j].distance.value;
                         distances["carDurationText"] = results[j].duration.text;
                         distances["carDurationValue"] = results[j].duration.value;
-
                     }
                 }
             }
@@ -185,17 +185,22 @@ function getDistances(trip) {
                 distances["railDurationValue"] = response.rows[0].elements[0].duration.value
                 distances["railDurationText"] = response.rows[0].elements[0].duration.text;
             }
+            calcCo2(distances, trip);
         }
     );
-
-    calcCo2(distances, trip);
-    return;
 }
 
 function calcCo2(distances, trip){
-    let km = distances["carDistanceValue"];
+    // console.log(distances)
+    console.log("HERUNDER")
+    console.log(trip["travellers"])
+    console.log(distances["carDistanceValue"])
+    let km = (distances["carDistanceValue"] / 1000).toString();
+    console.log(km)
     km = parseFloat(km.replace(/,/g, ''));
-    km = (km + parseFloat(trip["km"])) * parseFloat(trip["travellers"]);
+    console.log(km)
+    km = (km + parseFloat(trip["km"])) * (parseFloat(trip["travellers"]) + 1);
+    console.log(km)
 
     let co2 = {}; // kg co2 / km
     co2["km"] = km;
