@@ -1,46 +1,66 @@
+let distances = {};
+let markersArray = [];
+let map;
+
 function showOrHide(element){
     if (element.style.display === 'none') {
         element.style.display = "block";
     } else {
         element.style.display = "none";
+
     }
 }
 
 function submitForm(){
     let trip = {};
-
     trip["start"] = document.getElementById("origin").value;
     trip["end"] = document.getElementById("destination").value;
+
     trip["advanced"] = document.getElementById("advanced-search-drpdwn").value;
-    trip["km"] = document.getElementById("extra-km").value;
+    trip["km"] = document.getElementById("extra-km").value; //TODO should be meters
     trip["travellers"] = document.getElementById("travellers").value;
     console.log(trip)
+
+
     getDistances(trip)
 }
 
-let map;
-
 //Initmap called with callback in google.api src in html
 function initMap(){
+
     //init the map and zoom in on europe
+    const myLatlng = {
+        lat: 55.53,
+        lng: 9.4,
+    };
+
     map = new google.maps.Map(document.getElementById("map"), {
-        center: {
-            lat: 55.53,
-            lng: 9.4,
-        },
+        center: myLatlng,
         zoom: 6,
     });
 }
 
-/*TODO send array videre til ny calc function der sender vehicle og km til output view?
-*  vis rute på kort? flere stop på vejen
-* */
+//TODO if we want to return address from a marker on map
+function geocodePosition(pos) {
 
+    geocoder.geocode({
+        latLng: pos
+    }, function(responses) {
+        if (responses && responses.length > 0) {
+            marker.formatted_address = responses[0].formatted_address;
+            document.getElementById("destination").innerText = marker.formatted_address;
+        } else {
+            marker.formatted_address = 'Cannot determine address at this location.';
+        }
+        infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
+        infowindow.open(map, marker);
+
+    });
+
+}
 function getDistances(trip) {
     "use strict";
-    let distances = {};
     var bounds = new google.maps.LatLngBounds();
-    var markersArray = [];
 
 
     var origin1 = trip["start"].toString();
@@ -85,6 +105,8 @@ function getDistances(trip) {
                             markersArray.push(
                                 new google.maps.Marker({
                                     map: map,
+                                    // draggable: true,
+                                    animation: google.maps.Animation.DROP,
                                     position: results[0].geometry.location,
                                     icon: icon,
                                 })
@@ -94,6 +116,12 @@ function getDistances(trip) {
                         }
                     };
                 };
+
+                /*  TODO make markers draggable and return address to origin and destination input fields
+                                google.maps.event.addListener(markersArray, 'dragend', function() {
+                                    geocodePosition(marker.getPosition());
+                                });
+                */
 
                 for (var i = 0; i < originList.length; i++) {
                     var results = response.rows[i].elements;
@@ -121,25 +149,55 @@ function getDistances(trip) {
                             results[j].duration.text +
                             "<br>";
 
-
-/*
-                       // distances["origin"] = originList[i]
-                        // distances["destination"] = destinationList[j]
-                        distances["vehicle"] = "Car";    //TODO set vehicle
-                        distances["distance"] = results[j].distance.text;
-                        distances["duration"] = results[j].duration.text;
-*/
+                        distances["origin"] = originList[i]
+                        distances["destination"] = destinationList[j]
+                        distances["carDistanceText"] = results[j].distance.text;
+                        distances["carDurationText"] = results[j].duration.text;
 
                     }
                 }
             }
         }
     );
-  //  calcCo2(distances);
+    //Now find distance by RAIL (trains, subway etc)
+    service.getDistanceMatrix({
+            origins: [origin1], //More origins or destinations can be added
+            destinations: [destinationA],
+            travelMode: 'TRANSIT',
+            transitOptions:
+                {
+                    // arrivalTime: Date,    // OPTIONAL Defaults to now (that is, the current time) if no value is specified for either departureTime or arrivalTime
+                    // departureTime: Date,
+                    modes: ['RAIL'],
+                    // routingPreference: TransitRoutePreference
+                },
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false,
+        },        function (response, status) {
+            if (status !== "OK") {
+                alert("Error was: " + status);
+            } else {
+                console.log(response)
+
+                //TODO Vi tager bare første resultat fra google, måske find den korteste
+                distances["railDistanceValue"] = response.rows[0].elements[0].distance.value //Kan vi have flere elementer her? hvordan finder jeg korteste
+                distances["railDistanceText"] = response.rows[0].elements[0].distance.text
+                distances["railDurationValue"] = response.rows[0].elements[0].duration.value
+                distances["railDurationText"] = response.rows[0].elements[0].duration.text;
+            }
+        }
+    );
+
+    distances["extraMeters"] = trip["km"];
+    distances["travellers"] = trip["travellers"]
+    calcCo2(distances);
 }
+
 function calcCo2(distances){
-    //console.log(distances["distance"].toString())
+    console.log("Distance object rail distance text test: " + distances["railDistanceText"]); //TODO hvorfor er den undefined her
 }
+
 function deleteMarkers(markersArray) {
     for (var i = 0; i < markersArray.length; i++) {
         markersArray[i].setMap(null);
