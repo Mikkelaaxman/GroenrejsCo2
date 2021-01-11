@@ -5,13 +5,13 @@
     <link rel="stylesheet" href="../static/css/style.css">
     <title>Co2 Calculator</title>
 </head>
+
 <script src="../static/js/calculator.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbg0xrsWVY5tpNj-LcHSdDZmszVpvpK_U&callback=initMap&libraries=&v=weekly"
-        defer
-></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbg0xrsWVY5tpNj-LcHSdDZmszVpvpK_U&callback=initMap&libraries=&v=weekly" defer></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+
 <body>
     <div style="float: left" class="calculator-div">
         <label for="origin">Startlokation:</label>
@@ -24,29 +24,37 @@
         <button onclick="showOrHide(document.getElementById('advanced-div'))" id="advanced-search-btn">Avanceret søgning</button>
         <div id="advanced-div" style="display: none">
             <select id="advanced-search-drpdwn">
-                <option>Fly</option>
+                <option>Indenrigsfly</option>
+                <option>Udenrigsfly</option>
                 <option>Tog</option>
-                <option>Bil</option>
+                <option>Bus</option>
+                <option>Elbil</option>
+                <option>Hybridbil</option>
+                <option>Fossilbil</option>
             </select>
             <label>Ekstra km:</label> <!-- todo: tog/bil/fly -->
-            <input id="extra-km" type="number">
-            <label>Antal rejsende:</label>
-            <input id="travellers" type="number">
+            <input id="extra-km" type="number" placeholder="0" value="0">
+            <label>Antal ekstra rejsende:</label>
+            <input id="travellers" type="number" placeholder="0" value="0">
         </div>
         <button id="co2-submit" onclick="submitForm()">Udregn</button>
 
         <!--    todo: Bare et link?-->
         <button onclick="showOrHide(document.getElementById('how-text'))">Sådan gjorde vi</button>
-        <div id="how-text" style="display: none">Tekst her om hvordan vi gjorde.</div>
+        <div id="how-text" style="display: none">
+            <h2>Sådan gjorde vi</h2>
+            <p>Vi har hentet al vores info fra en dansk kilde - senest opdateret i 2018 - til vores udregninger.
+                Vi gør herudover brug af Google Maps API for at sørge for at km resultatet bliver præcist, både i bil, bus, tog, osv.</p>
+        </div>
     </div>
     <div style="float: left" class="result-div" id ="result-div">
         <div>Resultat</div>
         <div id="output"></div>
+
+        <button onclick="showOrHide(document.getElementById('advanced-result')); showOrHide(document.getElementById('bar-container'))">Avanceret resultat</button>
+        <div style="display: none" id="advanced-result"></div>
+        <div id="bar-container" style="width: 65vh; height: 30vh; display: none"></div>
     </div>
-
-    <button onclick="showOrHide(document.getElementById('advanced-result'))">Avanceret resultat</button>
-    <div style="display: none" id="advanced-result"></div>
-
     <!--    todo: Fix map layout den gider ikke blive vist inde i en anden div?-->
     <div id="map"></div>
 

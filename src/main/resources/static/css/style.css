@@ -2,22 +2,10 @@
     margin-left: 8vh;
 }
 
-div {
-    margin: 10px;
-}
 #map { /* Hvad er forkellen på # og .*/
     height: 100%;
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.map {
-    height: 100%;
-}
 html, body {
     height: 100%;
     margin: 0;
