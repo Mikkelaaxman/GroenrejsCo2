@@ -23,13 +23,14 @@
     <!-- todo: tjek om der er "HTML måde" at sende objekter videre -->
     <button onclick="showOrHide(document.getElementById('advanced-div'))" id="advanced-search-btn">Avanceret søgning</button>
     <div id="advanced-div" style="display: none">
+        <label>Ekstra km:</label> <!-- todo: tog/bil/fly -->
+        <input id="extra-km" type="number">
         <select id="advanced-search-drpdwn">
             <option>Fly</option>
             <option>Tog</option>
             <option>Bil</option>
+            <option>Bus</option>
         </select>
-        <label>Ekstra km:</label> <!-- todo: tog/bil/fly -->
-        <input id="extra-km" type="number">
         <label>Antal rejsende:</label>
         <input id="travellers" type="number">
     </div>

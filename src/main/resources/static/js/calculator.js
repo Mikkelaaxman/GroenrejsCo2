@@ -33,7 +33,7 @@ function initMap(){
 }
 
 /*TODO send array videre til ny calc function der sender vehicle og km til output view?
-*  vis rute på kort?
+*  vis rute på kort? flere stop på vejen
 * */
 
 function getDistances(trip) {
@@ -41,6 +41,8 @@ function getDistances(trip) {
     let distances = {};
     var bounds = new google.maps.LatLngBounds();
     var markersArray = [];
+
+
     var origin1 = trip["start"].toString();
     var destinationA = trip["end"].toString();
     var destinationIcon =
