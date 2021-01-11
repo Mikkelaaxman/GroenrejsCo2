@@ -161,25 +161,19 @@ function calcCo2(distances, trip){
 
 //todo: antal folk i bil obs
 function calculateExtra(object){
-    let test = 1;
+    let cars = 1;
     let fullAmount = parseFloat(object["extraTravellers"]) + 1;
+
+    for (let i = 0; i < fullAmount; i++) { if (i % 4 === 0){ cars = (i / 4) + 1; } }
+
+    if (object["extraTransType"] === 'Hybridbil') { object["extraCO2"] = ((parseFloat(object["extraKm"]) * 80) / 1000) * cars; }
+    if (object["extraTransType"] === 'Elbil') { object["extraCO2"] = ((parseFloat(object["extraKm"]) * 60) / 1000) * cars; }
+    if (object["extraTransType"] === 'Fossilbil') { object["extraCO2"] = ((parseFloat(object["extraKm"]) * 120) / 1000) * cars; }
 
     if(object["extraTransType"] === 'Indenrigsfly'){ object["extraCO2"] = (parseFloat(object["extraKm"]) * 180) / 1000; }
     if(object["extraTransType"] === 'Udenrigsfly'){ object["extraCO2"] = (parseFloat(object["extraKm"]) * 220) / 1000; }
     if(object["extraTransType"] === 'Tog'){ object["extraCO2"] = (parseFloat(object["extraKm"]) * 40) / 1000; }
     if(object["extraTransType"] === 'Bus'){ object["extraCO2"] = (parseFloat(object["extraKm"]) * 80) / 1000; }
-    for (let i = 0; i < fullAmount; i++) {
-        if (i % 4 === 0){ test = (i / 4) + 1; }
-    }
-    if (object["extraTransType"] === 'Hybridbil') {
-        object["extraCO2"] = ((parseFloat(object["extraKm"]) * 80) / 1000) * test;
-    }
-    if (object["extraTransType"] === 'Elbil') {
-        object["extraCO2"] = ((parseFloat(object["extraKm"]) * 60) / 1000) * test;
-    }
-    if (object["extraTransType"] === 'Fossilbil') {
-        object["extraCO2"] = ((parseFloat(object["extraKm"]) * 120) / 1000) * test;
-    }
 }
 
 function appendResult(object){
@@ -231,7 +225,7 @@ function appendResult(object){
 
 function createBarChart(object){
     anychart.onDocumentReady(function() {
-        // set the data
+
         let data = {
             header: ["Transport", "CO2/kg"],
             rows: [
@@ -257,6 +251,5 @@ function deleteMarkers(markersArray) {
     for (var i = 0; i < markersArray.length; i++) {
         markersArray[i].setMap(null);
     }
-
     markersArray = [];
 }
