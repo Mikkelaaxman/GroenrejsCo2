@@ -119,25 +119,65 @@ function getDistances(trip) {
                             results[j].duration.text +
                             "<br>";
 
-
-/*
-                       // distances["origin"] = originList[i]
-                        // distances["destination"] = destinationList[j]
+                        distances["origin"] = originList[i]
+                        distances["destination"] = destinationList[j]
                         distances["vehicle"] = "Car";    //TODO set vehicle
                         distances["distance"] = results[j].distance.text;
                         distances["duration"] = results[j].duration.text;
-*/
-
+                        calcCo2(distances);
+                        return;
                     }
                 }
             }
         }
     );
-  //  calcCo2(distances);
 }
+
 function calcCo2(distances){
-    //console.log(distances["distance"].toString())
+    let km = parseInt(distances["distance"].toString());
+
+    let co2 = {}; // kg co2 / km
+    co2["km"] = km;
+    co2["carElectric"] = (km * 60) / 1000; //advanced
+    co2["carHybrid"] = (km * 80) / 1000; //advanced
+    co2["carFossil"] = (km * 120) / 1000; //result
+    co2["train"] = (km * 40) / 1000; //result
+    co2["bus"] = (km * 80) / 1000; //result
+    co2["domesticFlight"] = (km * 180) / 1000; //advanced
+    co2["longDistFlight"] = (km * 220) / 1000; //result
+    console.log(co2);
+    appendResult(co2);
 }
+
+function appendResult(object){
+    let result = document.getElementById("output");
+    let advancedResult = document.getElementById("advanced-result");
+    let resultDiv = document.getElementById("result-table");
+    let advancedResultDiv = document.getElementById("advanced-result-table");
+
+    if (resultDiv !== null){
+        resultDiv.remove();
+        advancedResultDiv.remove();
+    }
+
+    result.insertAdjacentHTML("afterend", "<div id='result-table'><table><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th></tr> " +
+        "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td></tr>" +
+        "<tr><td>Train</td><td>" + object['train'] + "</td></tr> " +
+        "<tr><td>Bus</td><td>" + object['bus'] + "</td></tr>" +
+        "<tr><td>Fly</td><td>" + object['longDistFlight'] + "</td></tr></table></div>");
+    console.log("has been appended")
+
+    advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th><th>Udregning</th></tr> " +
+        "<tr><td>Elbil</td><td>" + object['carElectric'] + "</td><td> (" + object['km'] + " * 60CO<sub>2</sub>/g) / 1000 = " + object['carElectric'] + "</td></tr>" +
+        "<tr><td>Hybridbil</td><td>" + object['carHybrid'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['carHybrid'] + "</td></tr>" +
+        "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td><td> (" + object['km'] + " * 120CO<sub>2</sub>/g) / 1000 = " + object['carFossil'] + "</td></tr>" +
+        "<tr><td>Train</td><td>" + object['train'] + "</td><td> (" + object['km'] + " * 40CO<sub>2</sub>/g) / 1000 = " + object['train'] + "</td></tr> " +
+        "<tr><td>Bus</td><td>" + object['bus'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['bus'] + "</td></tr>" +
+        "<tr><td>Indenrigsfly</td><td>" + object['domesticFlight'] + "</td><td> (" + object['km'] + " * 180CO<sub>2</sub>/g) / 1000 = " + object['domesticFlight'] + "</td></tr>" +
+        "<tr><td>Udenrigsfly</td><td>" + object['longDistFlight'] + "</td><td> (" + object['km'] + " * 220CO<sub>2</sub>/g) / 1000 = " + object['longDistFlight'] + "</td></tr></table></div>"
+    );
+}
+
 function deleteMarkers(markersArray) {
     for (var i = 0; i < markersArray.length; i++) {
         markersArray[i].setMap(null);

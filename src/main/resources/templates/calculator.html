@@ -12,43 +12,43 @@
         defer
 ></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!--<body onload="load()">-->
-<div style="float: left" class="calculator-div">
-    <label for="origin">Startlokation:</label>
-    <input type="text" id="origin" value="Copenhagen, Denmark"><br><br>
-    <label for="destination">Slutlokation:</label>
-    <input type="text" id="destination" value="Stockholm, Sweden"><br><br>
+<body>
+    <div style="float: left" class="calculator-div">
+        <label for="origin">Startlokation:</label>
+        <input type="text" id="origin" value="Copenhagen, Denmark"><br><br>
+        <label for="destination">Slutlokation:</label>
+        <input type="text" id="destination" value="Stockholm, Sweden"><br><br>
 
-    <!-- todo: måske checkbox? -->
-    <!-- todo: tjek om der er "HTML måde" at sende objekter videre -->
-    <button onclick="showOrHide(document.getElementById('advanced-div'))" id="advanced-search-btn">Avanceret søgning</button>
-    <div id="advanced-div" style="display: none">
-        <select id="advanced-search-drpdwn">
-            <option>Fly</option>
-            <option>Tog</option>
-            <option>Bil</option>
-        </select>
-        <label>Ekstra km:</label> <!-- todo: tog/bil/fly -->
-        <input id="extra-km" type="number">
-        <label>Antal rejsende:</label>
-        <input id="travellers" type="number">
+        <!-- todo: måske checkbox? -->
+        <!-- todo: tjek om der er "HTML måde" at sende objekter videre -->
+        <button onclick="showOrHide(document.getElementById('advanced-div'))" id="advanced-search-btn">Avanceret søgning</button>
+        <div id="advanced-div" style="display: none">
+            <select id="advanced-search-drpdwn">
+                <option>Fly</option>
+                <option>Tog</option>
+                <option>Bil</option>
+            </select>
+            <label>Ekstra km:</label> <!-- todo: tog/bil/fly -->
+            <input id="extra-km" type="number">
+            <label>Antal rejsende:</label>
+            <input id="travellers" type="number">
+        </div>
+        <button id="co2-submit" onclick="submitForm()">Udregn</button>
+
+        <!--    todo: Bare et link?-->
+        <button onclick="showOrHide(document.getElementById('how-text'))">Sådan gjorde vi</button>
+        <div id="how-text" style="display: none">Tekst her om hvordan vi gjorde.</div>
     </div>
-    <button id="co2-submit" onclick="submitForm()">Udregn</button>
-
-    <!--    todo: Bare et link?-->
-    <button onclick="showOrHide(document.getElementById('how-text'))">Sådan gjorde vi</button>
-    <div id="how-text" style="display: none">Tekst her om hvordan vi gjorde.</div>
-</div>
-<div style="float: left" class="result-div" >
-    <div>Resultat</div>
-    <div id="output">Tabel over resultat.</div> <!-- todo: tabel -->
-
-</div>
-<!--    todo: Fix map layout den gider ikke blive vist inde i en anden div?-->
-<div id="map"></div>
-<div style="float: left" class="map-div">
+    <div style="float: left" class="result-div" id ="result-div">
+        <div>Resultat</div>
+        <div id="output"></div>
+    </div>
 
     <button onclick="showOrHide(document.getElementById('advanced-result'))">Avanceret resultat</button>
-    <div style="display: none" id="advanced-result">Her står det avancerede resultat!</div>
-</div>
+    <div style="display: none" id="advanced-result"></div>
+
+    <!--    todo: Fix map layout den gider ikke blive vist inde i en anden div?-->
+    <div id="map"></div>
+
+</body>
 </html>
