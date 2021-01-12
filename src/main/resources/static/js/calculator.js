@@ -262,13 +262,13 @@ function calcCo2(distances, trip){
 
     let co2 = {}; // kg co2 / km
     co2["km"] = km;
-    co2["carElectric"] = (km * 60) / 1000; //advanced
-    co2["carHybrid"] = (km * 80) / 1000; //advanced
-    co2["carFossil"] = (km * 120) / 1000; //result
-    co2["train"] = (km * 40) / 1000; //result
-    co2["bus"] = (km * 80) / 1000; //result
-    co2["domesticFlight"] = (km * 180) / 1000; //advanced
-    co2["longDistFlight"] = (km * 220) / 1000; //result
+    co2["carElectric"] = ((km * 60) / 1000).toFixed(4); //advanced
+    co2["carHybrid"] = ((km * 80) / 1000).toFixed(4); //advanced
+    co2["carFossil"] = ((km * 120) / 1000).toFixed(4); //result
+    co2["train"] = ((km * 40) / 1000).toFixed(4); //result
+    co2["bus"] = ((km * 80) / 1000).toFixed(4); //result
+    co2["domesticFlight"] = ((km * 180) / 1000).toFixed(4); //advanced
+    co2["longDistFlight"] = ((km * 220) / 1000).toFixed(4); //result
     co2["extraKm"] = trip["km"];
     co2["extraTravellers"] = trip["travellers"];
     co2["extraTransType"] = trip["advanced"];
@@ -321,6 +321,7 @@ function appendResult(object){
     if (object["extraKm"] !== '0' || object["extraTravellers"] !== '0') {
         result.insertAdjacentHTML("afterend", "<div id='extra-km-div'>Der er valgt " + object["extraKm"] + "km ekstra i " + object["extraTransType"].toLowerCase() +
             " for " + object["extraTravellers"] + " ekstra personer." +
+            " for " + object["extraTravellers"] + " ekstra personer." +
             " Dette er " + extraCO2 + "CO<sub>2</sub>/kg ekstra.</div>")
     }
 
@@ -362,7 +363,6 @@ function createBarChart(object){
         let chart = anychart.column();
         chart.data(data);
         chart.title("CO2 forbrug");
-
         chart.container("bar-container");
         chart.draw();
     });
