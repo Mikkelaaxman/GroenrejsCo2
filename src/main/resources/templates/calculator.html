@@ -13,6 +13,8 @@
 <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
 
 <body>
+<div class="fuld-div">
+<div id="left-cont">
     <div style="float: left" class="calculator-div">
         <label for="origin">Startlokation:</label>
         <input type="text" id="origin" value="Copenhagen, Denmark"><br><br>
@@ -47,16 +49,23 @@
                 Vi gør herudover brug af Google Maps API for at sørge for at km resultatet bliver præcist, både i bil, bus, tog, osv.</p>
         </div>
     </div>
-    <div style="float: left" class="result-div" id ="result-div">
+</div>
+
+    <div id="middel-cont">
+    <div class="result-div" id ="result-div">
         <div>Resultat</div>
         <div id="output"></div>
 
         <button onclick="showOrHide(document.getElementById('advanced-result')); showOrHide(document.getElementById('bar-container'))">Avanceret resultat</button>
         <div style="display: none" id="advanced-result"></div>
-        <div id="bar-container" style="width: 65vh; height: 30vh; display: none"></div>
-    </div>
-    <!--    todo: Fix map layout den gider ikke blive vist inde i en anden div?-->
-    <div id="map"></div>
 
+    </div>
+    </div>
+
+   <div id="right-cont">
+    <div id="map"></div>
+       <div id="bar-container" style="width: 65vh; height: 30vh; display: none"></div>
+   </div>
+</div>
 </body>
 </html>

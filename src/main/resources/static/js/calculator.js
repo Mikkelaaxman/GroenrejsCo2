@@ -295,7 +295,7 @@ function createBarChart(object){
                 ["El-bil", object["carElectric"]],
                 ["Hybridbil", object["carHybrid"]],
                 ["Fossilbil", object["carFossil"]],
-                ["Indenrigsfly", object["domesticFlight"]],
+                ["Fly", object["domesticFlight"]],
                 ["Udenrigsfly", object["longDistFlight"]]
             ]};
 

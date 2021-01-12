@@ -1,11 +1,45 @@
-.calculator-div, .map-div{
+/*.calculator-div, .map-div{
     margin-left: 8vh;
+}*/
+.fuld-div{
+    flex-direction: row;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+}
+#left-cont, #middel-cont, #right-cont{
+    margin-top: 2vh;
+    width: 31vw;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+}
+#middel-cont{
+
 }
 
-#map { /* Hvad er forkellen på # og .*/
+.result-div{
+
+}
+#right-cont{
+    /*float: right;
+    position: relative;*/
+    width: 31vw;
+    height: 20rem;
+}
+
+#map {
     height: 100%;
+    width: 100%;
 }
-
+/*#map_canvas{
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}*/
 html, body {
     height: 100%;
     margin: 0;
