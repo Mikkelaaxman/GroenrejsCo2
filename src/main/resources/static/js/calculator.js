@@ -325,11 +325,11 @@ function appendResult(object){
         "<tr><td>Fly</td><td>" + object['longDistFlight'] + "</td></tr></table></div>");
 
     advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th><th>Udregning</th></tr> " +
+        "<tr><td>Train</td><td>" + object['train'] + "</td><td> (" + object['km'] + " * 40CO<sub>2</sub>/g) / 1000 = " + object['train'] + "</td></tr> " +
+        "<tr><td>Bus</td><td>" + object['bus'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['bus'] + "</td></tr>" +
         "<tr><td>El-bil</td><td>" + object['carElectric'] + "</td><td> (" + object['km'] + " * 60CO<sub>2</sub>/g) / 1000 = " + object['carElectric'] + "</td></tr>" +
         "<tr><td>Hybridbil</td><td>" + object['carHybrid'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['carHybrid'] + "</td></tr>" +
         "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td><td> (" + object['km'] + " * 120CO<sub>2</sub>/g) / 1000 = " + object['carFossil'] + "</td></tr>" +
-        "<tr><td>Train</td><td>" + object['train'] + "</td><td> (" + object['km'] + " * 40CO<sub>2</sub>/g) / 1000 = " + object['train'] + "</td></tr> " +
-        "<tr><td>Bus</td><td>" + object['bus'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['bus'] + "</td></tr>" +
         "<tr><td>Indenrigsfly</td><td>" + object['domesticFlight'] + "</td><td> (" + object['km'] + " * 180CO<sub>2</sub>/g) / 1000 = " + object['domesticFlight'] + "</td></tr>" +
         "<tr><td>Udenrigsfly</td><td>" + object['longDistFlight'] + "</td><td> (" + object['km'] + " * 220CO<sub>2</sub>/g) / 1000 = " + object['longDistFlight'] + "</td></tr></table></div>"
     );
