@@ -239,6 +239,7 @@ function calculateExtra(object){
 
 function appendResult(object){
     let result = document.getElementById("output");
+    let map = document.getElementById("map");
     let advancedResult = document.getElementById("advanced-result");
     let resultDiv = document.getElementById("result-table");
     let advancedResultDiv = document.getElementById("advanced-result-table");
@@ -252,7 +253,7 @@ function appendResult(object){
         resultDiv.remove();
         advancedResultDiv.remove();
         barChart.remove();
-        advancedResult.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 65vh; height:30vh'></div>");
+        map.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 65vh; height:30vh'></div>");
     }
 
     if (extra !== null){
