@@ -249,31 +249,23 @@ function updateMarkerPath() {
 }
 
 function calcCo2(distances, trip){
-    // console.log(distances)
-    console.log("HERUNDER")
-    console.log(trip["travellers"])
-    console.log(distances["carDistanceValue"])
     let km = (distances["carDistanceValue"] / 1000).toString();
-    console.log(km)
     km = parseFloat(km.replace(/,/g, ''));
-    console.log(km)
     km = (km + parseFloat(trip["km"])) * (parseFloat(trip["travellers"]) + 1);
-    console.log(km)
 
     let co2 = {}; // kg co2 / km
     co2["km"] = km;
-    co2["carElectric"] = (km * 60) / 1000; //advanced
-    co2["carHybrid"] = (km * 80) / 1000; //advanced
-    co2["carFossil"] = (km * 120) / 1000; //result
-    co2["train"] = (km * 40) / 1000; //result
-    co2["bus"] = (km * 80) / 1000; //result
-    co2["domesticFlight"] = (km * 180) / 1000; //advanced
-    co2["longDistFlight"] = (km * 220) / 1000; //result
+    co2["carElectric"] = ((km * 60) / 1000).toFixed(4); //advanced
+    co2["carHybrid"] = ((km * 80) / 1000).toFixed(4); //advanced
+    co2["carFossil"] = ((km * 120) / 1000).toFixed(4); //result
+    co2["train"] = ((km * 40) / 1000).toFixed(4); //result
+    co2["bus"] = ((km * 80) / 1000).toFixed(4); //result
+    co2["domesticFlight"] = ((km * 180) / 1000).toFixed(4); //advanced
+    co2["longDistFlight"] = ((km * 220) / 1000).toFixed(4); //result
     co2["extraKm"] = trip["km"];
     co2["extraTravellers"] = trip["travellers"];
     co2["extraTransType"] = trip["advanced"];
     co2["extraCO2"] = 0;
-    console.log(co2);
     calculateExtra(co2);
     appendResult(co2);
 }
@@ -321,22 +313,24 @@ function appendResult(object){
     if (object["extraKm"] !== '0' || object["extraTravellers"] !== '0') {
         result.insertAdjacentHTML("afterend", "<div id='extra-km-div'>Der er valgt " + object["extraKm"] + "km ekstra via " + object["extraTransType"].toLowerCase() +
             " for " + object["extraTravellers"] + " ekstra personer." +
+            " for " + object["extraTravellers"] + " ekstra personer." +
             " Dette er " + extraCO2 + "CO<sub>2</sub>/kg ekstra.</div>")
     }
 
     result.insertAdjacentHTML("afterend", "<div id='result-table'>" +
-        "<table class='styled-table'><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th></tr> " +
-        "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td></tr>" +
+        "<table class='styled-table' id='result-table'><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th></tr> " +
         "<tr class='active-row'><td>Train</td><td>" + object['train'] + "</td></tr> " +
         "<tr><td>Bus</td><td>" + object['bus'] + "</td></tr>" +
+        "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td></tr>" +
         "<tr><td>Fly</td><td>" + object['longDistFlight'] + "</td></tr></table></div>");
 
-    advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table class='styled-table'><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th><th>Udregning</th></tr> " +
+
+    advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table class='styled-table' id='advanced-table'><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th><th>Udregning</th></tr> " +
+        "<tr class='active-row'><td>Train</td><td>" + object['train'] + "</td><td> (" + object['km'] + " * 40CO<sub>2</sub>/g) / 1000 = " + object['train'] + "</td></tr> " +
+        "<tr><td>Bus</td><td>" + object['bus'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['bus'] + "</td></tr>" +
         "<tr><td>El-bil</td><td>" + object['carElectric'] + "</td><td> (" + object['km'] + " * 60CO<sub>2</sub>/g) / 1000 = " + object['carElectric'] + "</td></tr>" +
         "<tr><td>Hybridbil</td><td>" + object['carHybrid'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['carHybrid'] + "</td></tr>" +
         "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td><td> (" + object['km'] + " * 120CO<sub>2</sub>/g) / 1000 = " + object['carFossil'] + "</td></tr>" +
-        "<tr class='active-row'><td>Train</td><td>" + object['train'] + "</td><td> (" + object['km'] + " * 40CO<sub>2</sub>/g) / 1000 = " + object['train'] + "</td></tr> " +
-        "<tr><td>Bus</td><td>" + object['bus'] + "</td><td> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['bus'] + "</td></tr>" +
         "<tr><td>Indenrigsfly</td><td>" + object['domesticFlight'] + "</td><td> (" + object['km'] + " * 180CO<sub>2</sub>/g) / 1000 = " + object['domesticFlight'] + "</td></tr>" +
         "<tr><td>Udenrigsfly</td><td>" + object['longDistFlight'] + "</td><td> (" + object['km'] + " * 220CO<sub>2</sub>/g) / 1000 = " + object['longDistFlight'] + "</td></tr></table></div>"
     );
@@ -362,7 +356,6 @@ function createBarChart(object){
         let chart = anychart.bar();
         chart.data(data);
         chart.title("CO2 forbrug");
-
         chart.container("bar-container");
         chart.draw();
     });

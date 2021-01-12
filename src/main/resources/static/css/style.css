@@ -7,8 +7,8 @@
 #left-cont, #middel-cont, #right-cont{
     margin-top: 2vh;
     width: 31vw;
-    padding-left: 0.5rem;
     padding-right: 0.5rem;
+    padding-left: 0.5rem;
 }
 #right-cont{
     width: 31vw;
@@ -25,12 +25,18 @@ html, body {
 }
 .styled-table {
     border-collapse: collapse;
-    margin: 25px 0;
     font-size: 0.9em;
     font-family: sans-serif;
-    width: max-content;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
+#result-table{
+    width: 31vw;
+    height: 20rem;
+}
+#advanced-table{
+    width: available;
+}
+
 .styled-table thead tr {
     background-color: #009879;
     color: #ffffff;
