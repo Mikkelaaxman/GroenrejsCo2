@@ -249,16 +249,9 @@ function updateMarkerPath() {
 }
 
 function calcCo2(distances, trip){
-    // console.log(distances)
-    console.log("HERUNDER")
-    console.log(trip["travellers"])
-    console.log(distances["carDistanceValue"])
     let km = (distances["carDistanceValue"] / 1000).toString();
-    console.log(km)
     km = parseFloat(km.replace(/,/g, ''));
-    console.log(km)
     km = (km + parseFloat(trip["km"])) * (parseFloat(trip["travellers"]) + 1);
-    console.log(km)
 
     let co2 = {}; // kg co2 / km
     co2["km"] = km;
@@ -273,7 +266,6 @@ function calcCo2(distances, trip){
     co2["extraTravellers"] = trip["travellers"];
     co2["extraTransType"] = trip["advanced"];
     co2["extraCO2"] = 0;
-    console.log(co2);
     calculateExtra(co2);
     appendResult(co2);
 }
@@ -327,9 +319,9 @@ function appendResult(object){
 
     result.insertAdjacentHTML("afterend", "<div id='result-table'>" +
         "<table><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th></tr> " +
-        "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td></tr>" +
         "<tr><td>Train</td><td>" + object['train'] + "</td></tr> " +
         "<tr><td>Bus</td><td>" + object['bus'] + "</td></tr>" +
+        "<tr><td>Fossilbil</td><td>" + object['carFossil'] + "</td></tr>" +
         "<tr><td>Fly</td><td>" + object['longDistFlight'] + "</td></tr></table></div>");
 
     advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th><th>Udregning</th></tr> " +
