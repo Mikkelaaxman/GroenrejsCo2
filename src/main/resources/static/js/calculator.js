@@ -1,5 +1,8 @@
-let markersArray = [];
 let map;
+let markerOrigin, markerDestination;
+let poly, geodesicPoly;
+let geocoder;
+let service;
 
 function showOrHide(element){
     if (element.style.display === 'none') {
@@ -21,56 +24,108 @@ function submitForm(){
     getDistances(trip)
 }
 
-//Initmap called with callback in google.api src in html
+//Function for calculating distance between two points on earth https://en.wikipedia.org/wiki/Haversine_formula
+function haversine_distance(mk1, mk2) {
+    var R = 3958.8; // Radius of the Earth in miles
+    var rlat1 = mk1.position.lat() * (Math.PI/180); // Convert degrees to radians
+    var rlat2 = mk2.position.lat() * (Math.PI/180); // Convert degrees to radians
+    var difflat = rlat2-rlat1; // Radian difference (latitudes)
+    var difflon = (mk2.position.lng()-mk1.position.lng()) * (Math.PI/180); // Radian difference (longitudes)
+
+    var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+    return d;
+}
+
+/**
+ * Initmap called with callback in google.api src in html
+ * @author mikkelaaxman
+ */
 function initMap(){
-    //init the map and zoom in on europe
+    //init the map and zoom in on Denmark
     const myLatlng = {
         lat: 55.53,
         lng: 9.4,
     };
-
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: myLatlng,
-        zoom: 6,
-    });
-}
-
-//TODO if we want to return address from a marker on map
-function geocodePosition(pos) {
-
-    geocoder.geocode({
-        latLng: pos
-    }, function(responses) {
-        if (responses && responses.length > 0) {
-            marker.formatted_address = responses[0].formatted_address;
-            document.getElementById("destination").innerText = marker.formatted_address;
-        } else {
-            marker.formatted_address = 'Cannot determine address at this location.';
-        }
-        infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
-        infowindow.open(map, marker);
-    });
-}
-
-function getDistances(trip) {
-    let distances = {};
-
-    "use strict";
-    var bounds = new google.maps.LatLngBounds();
-
-
-    var origin1 = trip["start"].toString();
-    var destinationA = trip["end"].toString();
     var destinationIcon =
         "https://chart.googleapis.com/chart?" +
         "chst=d_map_pin_letter&chld=D|FF0000|000000";
     var originIcon =
         "https://chart.googleapis.com/chart?" +
         "chst=d_map_pin_letter&chld=O|FFFF00|000000";
+    geocoder = new google.maps.Geocoder();
+    service = new google.maps.DistanceMatrixService();
 
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: myLatlng,
+        zoom: 6,
+    });
 
-    var geocoder = new google.maps.Geocoder();
-    var service = new google.maps.DistanceMatrixService();
+    //Init the two markers and listeners
+    markerOrigin = new google.maps.Marker({
+        //  map: null,  //Start invisible, use setMap(map) to show
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: myLatlng,
+        icon: originIcon,
+    });
+    markerDestination = new google.maps.Marker({
+        // map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: myLatlng,
+        icon: destinationIcon,
+    });
+    //listens for dragging of marker ends
+    google.maps.event.addListener(markerDestination,'dragend',function(){
+
+        geocodePosition(markerDestination.getPosition(), true)
+        updateMarkerPath();
+    });
+    google.maps.event.addListener(markerOrigin,'dragend',function(){
+        geocodePosition(markerOrigin.getPosition(), false)
+        updateMarkerPath();
+    });
+
+    poly = new google.maps.Polyline({
+        strokeColor: "#FF0000",
+        strokeOpacity: 1.0,
+        strokeWeight: 3,
+        map: map,
+    });
+    geodesicPoly = new google.maps.Polyline({
+        strokeColor: "#CC0099",
+        strokeOpacity: 1.0,
+        strokeWeight: 3,
+        geodesic: true,
+        map: map,
+    });
+}
+
+/**
+ * The method for getting distance between two addresses for car, train and plane.
+ * Creates distance object containing:
+ * "flightDistanceValue"    in meters
+ * "origin"
+ * "destination"
+ * "carDistanceText"    i.e. 1.15 km
+ * "carDistanceValue"   in meters
+ * "carDurationText"    time in plain text
+ * "carDurationValue"   in seconds
+ * "railDistanceValue"
+ * "railDistanceText"
+ * "railDurationValue"
+ * "railDurationText"   in seconds
+ * @param trip
+ * @author Mikkelaaxman
+ */
+function getDistances(trip) {
+    "use strict";
+
+    let distances = {};
+    var bounds = new google.maps.LatLngBounds();
+    var origin1 = trip["start"].toString();
+    var destinationA = trip["end"].toString();
+
     service.getDistanceMatrix(
         {
             origins: [origin1], //More origins or destinations can be added
@@ -86,78 +141,44 @@ function getDistances(trip) {
             } else {
                 var originList = response.originAddresses;
                 var destinationList = response.destinationAddresses;
-                var outputDiv = document.getElementById("output");
-                outputDiv.innerHTML = "";   //TODO show results properly
 
-                //Showing origin and destination markers on map
-                deleteMarkers(markersArray);  //TODO markers arent being deleted
-                var showGeocodedAddressOnMap = function showGeocodedAddressOnMap(
-                    asDestination
-                ) {
-                    var icon = asDestination ? destinationIcon : originIcon;
-                    return function (results, status) {
-                        if (status === "OK") {
-                            map.fitBounds(bounds.extend(results[0].geometry.location));
-                            markersArray.push(
-                                new google.maps.Marker({
-                                    map: map,
-                                    // draggable: true,
-                                    animation: google.maps.Animation.DROP,
-                                    position: results[0].geometry.location,
-                                    icon: icon,
-                                })
-                            );
-                        } else {
-                            alert("Geocode was not successful due to: " + status);
-                        }
-                    };
-                };
+                geocoder.geocode({ address: originList[0] }, (results, status) => {
+                    if (status === "OK") {
+                        map.fitBounds(bounds.extend(results[0].geometry.location));
+                        markerOrigin.setPosition(results[0].geometry.location);
+                        markerOrigin.setMap(map);
 
-                /*  TODO make markers draggable and return address to origin and destination input fields
-
-                           google.maps.event.addListener(markersArray, 'dragend', function() {
-                               geocodePosition(marker.getPosition());
-                           });
-                */
-
-                for (var i = 0; i < originList.length; i++) {
-                    var results = response.rows[i].elements;
-                    geocoder.geocode(
-                        {
-                            address: originList[i],
-                        },
-                        showGeocodedAddressOnMap(false)
-                    );
-
-                    for (var j = 0; j < results.length; j++) {
-                        geocoder.geocode(
-                            {
-                                address: destinationList[j],
-                            },
-                            showGeocodedAddressOnMap(true)
-                        );
-                        outputDiv.innerHTML +=
-                            originList[i] +
-                            " to " +
-                            destinationList[j] +
-                            ": " +
-                            results[j].distance.text +
-                            " in " +
-                            results[j].duration.text +
-                            "<br>";
-
-                        distances["origin"] = originList[i]
-                        distances["destination"] = destinationList[j]
-                        distances["carDistanceText"] = results[j].distance.text;
-                        distances["carDistanceValue"] = results[j].distance.value;
-                        distances["carDurationText"] = results[j].duration.text;
-                        distances["carDurationValue"] = results[j].duration.value;
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
                     }
-                }
+                });
+                geocoder.geocode({ address: destinationList[0] }, (results, status) => {
+                    if (status === "OK") {
+                        map.fitBounds(bounds.extend(results[0].geometry.location));
+                        markerDestination.setPosition(results[0].geometry.location);
+                        markerDestination.setMap(map);
+
+                        updateMarkerPath(); //Draw a new line between points
+
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+                //finding distance by plane:
+                distances["flightDistanceValue"]=haversine_distance(markerOrigin, markerDestination);
+
+                //Adding car route info to distances object
+                distances["origin"] = originList[0];
+                distances["destination"] = destinationList[0];
+                distances["carDistanceText"] = response.rows[0].elements[0].distance.text;
+                distances["carDistanceValue"] = response.rows[0].elements[0].distance.value;
+                distances["carDurationText"] = response.rows[0].elements[0].duration.text;
+                distances["carDurationValue"] = response.rows[0].elements[0].duration.value;
+
             }
         }
     );
-    //Now find distance by RAIL (trains, subway etc)
+    //Finding distance by RAIL (trains, subway etc)
     service.getDistanceMatrix({
             origins: [origin1], //More origins or destinations can be added
             destinations: [destinationA],
@@ -177,17 +198,54 @@ function getDistances(trip) {
             if (status !== "OK") {
                 alert("Error was: " + status);
             } else {
-                console.log(response)
-
                 //TODO Vi tager bare første resultat fra google, måske find den korteste
-                distances["railDistanceValue"] = response.rows[0].elements[0].distance.value //Kan vi have flere elementer her? hvordan finder jeg korteste
-                distances["railDistanceText"] = response.rows[0].elements[0].distance.text
-                distances["railDurationValue"] = response.rows[0].elements[0].duration.value
+                //TODO Bug i response.rows[0].elements[0].distance.value, tror den ikke overskriver korrekt
+                distances["railDistanceValue"] = response.rows[0].elements[0].distance.value;
+                distances["railDistanceText"] = response.rows[0].elements[0].distance.text;
+                distances["railDurationValue"] = response.rows[0].elements[0].duration.value;
                 distances["railDurationText"] = response.rows[0].elements[0].duration.text;
+                calcCo2(distances, trip);
             }
-            calcCo2(distances, trip);
         }
     );
+}
+
+/**
+ * Takes a position (perhaps from marker.getPosition()) and a boolean for placement,
+ * and returns address to the correct input field in html
+ * @param pos
+ * @param asDestination Boolean: false if origin, true if destination
+ * @author mikkelaaxman
+ */
+function geocodePosition(pos, asDestination) {
+    var field = asDestination ? document.getElementById("destination") : document.getElementById("origin");
+    geocoder.geocode({
+        latLng: pos
+    }, function(responses) {
+        if (responses && responses.length > 0) {
+            field.value = String(responses[0].formatted_address);
+        } else {
+            alert("Cannot determine address at this location")
+        }
+    });
+}
+
+/**
+ * Draws a geodesic line (curves with the earth) between the two markers
+ * @author mikkelaaxman
+ */
+function updateMarkerPath() {
+
+    var path = [markerOrigin.getPosition(), markerDestination.getPosition()];
+    //  poly.setPath(path);
+    geodesicPoly.setPath(path);
+
+    //Heading of path in degrees.
+    const heading = google.maps.geometry.spherical.computeHeading(
+        path[0],
+        path[1]
+    );
+    console.log("Heading" + String(heading));
 }
 
 function calcCo2(distances, trip){
@@ -239,7 +297,7 @@ function calculateExtra(object){
 
 function appendResult(object){
     let result = document.getElementById("output");
-    let map = document.getElementById("map");
+    let forBar = document.getElementById("for-bar-chart");
     let advancedResult = document.getElementById("advanced-result");
     let resultDiv = document.getElementById("result-table");
     let advancedResultDiv = document.getElementById("advanced-result-table");
@@ -253,7 +311,7 @@ function appendResult(object){
         resultDiv.remove();
         advancedResultDiv.remove();
         barChart.remove();
-        map.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 65vh; height:30vh'></div>");
+        forBar.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 65vh; height:30vh'></div>");
     }
 
     if (extra !== null){
@@ -308,11 +366,4 @@ function createBarChart(object){
         chart.container("bar-container");
         chart.draw();
     });
-}
-function deleteMarkers(markersArray) {
-    for (var i = 0; i < markersArray.length; i++) {
-        markersArray[i].setMap(null);
-    }
-
-    markersArray = [];
 }
