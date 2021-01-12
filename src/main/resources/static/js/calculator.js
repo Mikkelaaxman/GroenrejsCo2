@@ -355,11 +355,11 @@ function createBarChart(object){
                 ["El-bil", object["carElectric"]],
                 ["Hybridbil", object["carHybrid"]],
                 ["Fossilbil", object["carFossil"]],
-                ["Fly", object["domesticFlight"]],
+                ["IndenrigsFly", object["domesticFlight"]],
                 ["Udenrigsfly", object["longDistFlight"]]
             ]};
 
-        let chart = anychart.column();
+        let chart = anychart.bar();
         chart.data(data);
         chart.title("CO2 forbrug");
 
