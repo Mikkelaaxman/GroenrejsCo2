@@ -1,0 +1,11 @@
+{
+  "name": "GroenrejsCo2",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "unit.js": "^2.1.1"
+  },
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha tests/js/test.js"
+  }
+}
