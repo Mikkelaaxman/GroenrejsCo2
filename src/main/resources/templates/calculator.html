@@ -23,7 +23,7 @@
 
         <!-- todo: måske checkbox? -->
         <!-- todo: tjek om der er "HTML måde" at sende objekter videre -->
-        <button onclick="showOrHide(document.getElementById('advanced-div'))" id="advanced-search-btn">Avanceret søgning</button>
+        <button onclick="showOrHide(document.getElementById('advanced-div'))" id="advanced-search-btn" class="left-btn">Avanceret søgning</button>
         <div id="advanced-div" style="display: none">
             <select id="advanced-search-drpdwn">
                 <option>Indenrigsfly</option>
@@ -39,15 +39,15 @@
             <label>Antal ekstra rejsende:</label>
             <input id="travellers" type="number" placeholder="0" value="0">
         </div>
-        <button id="co2-submit" onclick="submitForm()">Udregn</button>
+        <button id="co2-submit" class="left-btn" onclick="submitForm()">Udregn</button>
 
         <!--    todo: Bare et link?-->
         <div id="for-bar-chart"></div>
-        <div id="bar-container" style="width: 29vw; height: 60vh; display: none"></div>
-        <button onclick="showOrHide(document.getElementById('how-text'))">Sådan gjorde vi</button>
+        <div id="bar-container" style="width: 31vw; height: 60vh; display: none"></div>
+        <button onclick="showOrHide(document.getElementById('how-text'))"class="left-btn">Sådan gjorde vi</button>
         <div id="how-text" style="display: none">
-            <h2>Sådan gjorde vi</h2>
-            <p>Vi har hentet al vores info fra en dansk kilde - senest opdateret i 2018 - til vores udregninger.
+            <h2>Sådan Gjorde Vi</h2>
+            <p>Vi har hentet al vores info fra en dansk kilde - senest opdateret i 2018 - til vores udregninger. <br>
                 Vi gør herudover brug af Google Maps API for at sørge for at km resultatet bliver præcist, både i bil, bus, tog, osv.</p>
         </div>
     </div>
@@ -56,7 +56,7 @@
     <div id="middel-cont">
     <div class="result-div" id ="result-div">
         <div id="output"></div>
-        <button onclick="showOrHide(document.getElementById('advanced-result')); showOrHide(document.getElementById('bar-container'))">Avanceret resultat</button>
+        <button class="advanced-result-btn" onclick="showOrHide(document.getElementById('advanced-result')); showOrHide(document.getElementById('bar-container'))">Avanceret resultat</button>
         <div style="display: none" id="advanced-result"></div>
     </div>
     </div>

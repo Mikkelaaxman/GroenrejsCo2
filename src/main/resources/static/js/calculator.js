@@ -303,29 +303,30 @@ function appendResult(object){
         resultDiv.remove();
         advancedResultDiv.remove();
         barChart.remove();
-        forBar.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 29vw; height:60vh'></div>");
+        forBar.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 31vw; height:60vh'></div>");
     }
 
     if (extra !== null){
         extra.remove();
     }
 
-    if (object["extraKm"] !== '0' || object["extraTravellers"] !== '0') {
-        result.insertAdjacentHTML("afterend", "<div id='extra-km-div'>Der er valgt " + object["extraKm"] + "km ekstra via " + object["extraTransType"].toLowerCase() +
-            " for " + object["extraTravellers"] + " ekstra personer." +
-            " for " + object["extraTravellers"] + " ekstra personer." +
-            " Dette er " + extraCO2 + "CO<sub>2</sub>/kg ekstra.</div>")
-    }
+    // if (object["extraKm"] !== '0' || object["extraTravellers"] !== '0') {
+    //     result.insertAdjacentHTML("afterend", "<div id='extra-km-div'>Der er valgt " + object["extraKm"] + "km ekstra via " + object["extraTransType"].toLowerCase() +
+    //         " for " + object["extraTravellers"] + " ekstra personer." +
+    //         " for " + object["extraTravellers"] + " ekstra personer." +
+    //         " Dette er " + extraCO2 + "CO<sub>2</sub>/kg ekstra.</div>")
+    // }
 
     result.insertAdjacentHTML("afterend", "<div id='result-table'>" +
-        "<table class='styled-table' id='result-table'><tr><th>Transportmiddel</th><th class='right-align'>kg CO<sub>2</sub>/km</th></tr> " +
+        "<table class='styled-table' id='result-table'><tr><th>Transportmiddel</th><th class='right-align'>kg CO<sub>2</sub></th></tr> " +
         "<tr class='active-row'><td>Train</td><td class='right-align'>" + object['train'] + "</td></tr> " +
         "<tr><td>Bus</td><td class='right-align'>" + object['bus'] + "</td></tr>" +
         "<tr><td>Fossilbil</td><td class='right-align'>" + object['carFossil'] + "</td></tr>" +
-        "<tr><td>Fly</td><td class='right-align'>" + object['longDistFlight'] + "</td></tr></table></div>");
+        "<tr><td>Fly</td><td class='right-align'>" + object['longDistFlight'] + "</td></tr>" +
+        "<tr><td>Ekstra</td><td class='right-align'>" + extraCO2 + "</td></tr></table></div>");
 
 
-    advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table class='styled-table' id='advanced-table'><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub>/km</th><th class='right-align'>Udregning</th></tr> " +
+    advancedResult.insertAdjacentHTML("afterbegin", "<div id='advanced-result-table'><table class='styled-table' id='advanced-table'><tr><th>Transportmiddel</th><th>kg CO<sub>2</sub></th><th class='right-align'>Udregning</th></tr> " +
         "<tr class='active-row'><td>Train</td><td>" + object['train'] + "</td><td class='right-align'> (" + object['km'] + " * 40CO<sub>2</sub>/g) / 1000 = " + object['train'] + "</td></tr> " +
         "<tr><td>Bus</td><td>" + object['bus'] + "</td><td class='right-align'> (" + object['km'] + " * 80CO<sub>2</sub>/g) / 1000 = " + object['bus'] + "</td></tr>" +
         "<tr><td>El-bil</td><td>" + object['carElectric'] + "</td><td class='right-align'> (" + object['km'] + " * 60CO<sub>2</sub>/g) / 1000 = " + object['carElectric'] + "</td></tr>" +
