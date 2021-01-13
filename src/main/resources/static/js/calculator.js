@@ -303,7 +303,7 @@ function appendResult(object){
         resultDiv.remove();
         advancedResultDiv.remove();
         barChart.remove();
-        forBar.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 65vh; height:30vh'></div>");
+        forBar.insertAdjacentHTML("afterend","<div id='bar-container' style='width: 29vw; height:60vh'></div>");
     }
 
     if (extra !== null){
