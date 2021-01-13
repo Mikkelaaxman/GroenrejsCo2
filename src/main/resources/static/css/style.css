@@ -10,6 +10,7 @@
     padding-right: 0.5rem;
     padding-left: 0.5rem;
 }
+
 #right-cont{
     width: 31vw;
     height: 20rem;
@@ -29,18 +30,25 @@ html, body {
     font-family: sans-serif;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
+td, th{
+    text-align: left;
+}
+.right-align{
+    text-align: right;
+}
+.styled-table,
 #result-table{
     width: 31vw;
     height: 20rem;
 }
 #advanced-table{
-    width: available;
+    width: 63vw;
 }
 
 .styled-table thead tr {
     background-color: #009879;
     color: #ffffff;
-    text-align: left;
+    text-align: right;
 }
 .styled-table th,
 .styled-table td {
